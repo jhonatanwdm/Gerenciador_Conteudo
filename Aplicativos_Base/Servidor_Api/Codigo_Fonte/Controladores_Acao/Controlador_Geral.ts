@@ -8,6 +8,24 @@ import { ServicoComentario } from '../Servicos_Negocio/Servico_Comentario.js';
 import { ServicoMidia } from '../Servicos_Negocio/Servico_Midia.js';
 
 export class ControladorGeral {
+  public static obterVersaoAtual(): string {
+    try {
+      const caminhosPkg = [
+        path.resolve(process.cwd(), 'package.json'),
+        path.resolve(__dirname, '../../../package.json'),
+        path.resolve(__dirname, '../../package.json'),
+        'D:/Gerenciador_Conteudo/package.json',
+      ];
+      for (const p of caminhosPkg) {
+        if (fs.existsSync(p)) {
+          const dados = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (dados && dados.version) return dados.version;
+        }
+      }
+    } catch {}
+    return '1.1.0';
+  }
+
   public static async saudeSistema(req: Request, res: Response): Promise<void> {
     try {
       await clienteBanco.$queryRaw`SELECT 1`;
@@ -16,7 +34,7 @@ export class ControladorGeral {
         timestamp: new Date().toISOString(),
         modoSimulado: process.env.MOCK_MODE === 'true',
         banco: 'CONECTADO',
-        versao: '1.1.0',
+        versao: ControladorGeral.obterVersaoAtual(),
       });
     } catch (erro: any) {
       res.status(500).json({
@@ -168,9 +186,11 @@ export class ControladorGeral {
         } catch {}
       }
 
-      const assinatura = `ui:${buildUiMtime}_cnt:${contagemContas}_${contagemPublicacoes}_${contagemConteudos}_${contagemComentarios}_mod:${tsConta}_${tsPub}_${tsComent}`;
+      const versaoAtual = ControladorGeral.obterVersaoAtual();
+      const assinatura = `ver:${versaoAtual}_ui:${buildUiMtime}_cnt:${contagemContas}_${contagemPublicacoes}_${contagemConteudos}_${contagemComentarios}_mod:${tsConta}_${tsPub}_${tsComent}`;
       res.json({
         ok: true,
+        versao: versaoAtual,
         assinatura,
         buildUiMtime,
         timestamp: Date.now(),

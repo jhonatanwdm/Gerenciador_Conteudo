@@ -84,21 +84,21 @@ if (fs.existsSync(arquivoControladorGeral)) {
   console.log(`✓ Atualizado versao no Controlador_Geral.ts`);
 }
 
-// Atualizar badges em README.md e LEIA-ME.md
+// Atualizar badges em README.md (EN) e LEIA-ME.md (PT-BR)
 const arquivoReadme = path.join(raizProjeto, 'README.md');
 if (fs.existsSync(arquivoReadme)) {
   let doc = fs.readFileSync(arquivoReadme, 'utf8');
-  doc = doc.replace(/badge\/vers[aã%0-9A-F]+-[0-9.]+-blue/gi, `badge/vers%C3%A3o-${novaVersao}-blue`);
+  doc = doc.replace(/badge\/version-[0-9.]+-blue/gi, `badge/version-${novaVersao}-blue`);
   fs.writeFileSync(arquivoReadme, doc, 'utf8');
-  console.log(`✓ Atualizado badge de versão em README.md`);
+  console.log(`✓ Atualizado badge de versão em README.md (EN)`);
 }
 
 const arquivoLeiaMe = path.join(raizProjeto, 'LEIA-ME.md');
 if (fs.existsSync(arquivoLeiaMe)) {
   let doc = fs.readFileSync(arquivoLeiaMe, 'utf8');
-  doc = doc.replace(/badge\/version-[0-9.]+-blue/gi, `badge/version-${novaVersao}-blue`);
+  doc = doc.replace(/badge\/vers[aã%0-9A-F]+-[0-9.]+-blue/gi, `badge/vers%C3%A3o-${novaVersao}-blue`);
   fs.writeFileSync(arquivoLeiaMe, doc, 'utf8');
-  console.log(`✓ Atualizado badge de versão em LEIA-ME.md`);
+  console.log(`✓ Atualizado badge de versão em LEIA-ME.md (PT-BR)`);
 }
 
 // 4. Recompilar Interface Web se necessário
@@ -111,6 +111,19 @@ try {
   console.log('✓ Interface Web compilada com sucesso.');
 } catch (e) {
   console.warn('⚠️ Aviso: falha na compilação da Interface Web (continuando processo):', e.message);
+}
+
+// 4.1 Recompilar Iniciar_Aplicativo.exe se csc.exe estiver disponível
+const cscPath = 'C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe';
+if (fs.existsSync(cscPath)) {
+  try {
+    console.log('\n🔨 Recompilando Iniciar_Aplicativo.exe...');
+    const cmdCsc = `"${cscPath}" /target:winexe /out:Iniciar_Aplicativo.exe /win32icon:Infraestrutura_Sistema\\Recursos_Visuais\\Icone_Padrao.ico /reference:System.dll,System.Windows.Forms.dll,System.Drawing.dll,Infraestrutura_Sistema\\Bibliotecas_Nativas\\Microsoft.Web.WebView2.Core.dll,Infraestrutura_Sistema\\Bibliotecas_Nativas\\Microsoft.Web.WebView2.WinForms.dll /resource:Infraestrutura_Sistema\\Bibliotecas_Nativas\\Microsoft.Web.WebView2.Core.dll,Microsoft.Web.WebView2.Core.dll /resource:Infraestrutura_Sistema\\Bibliotecas_Nativas\\Microsoft.Web.WebView2.WinForms.dll,Microsoft.Web.WebView2.WinForms.dll Infraestrutura_Sistema\\Scripts_Automacao\\Iniciar_Aplicativo.cs`;
+    execSync(cmdCsc, { cwd: raizProjeto, stdio: 'ignore' });
+    console.log('✓ Iniciar_Aplicativo.exe recompilado com sucesso.');
+  } catch (e) {
+    console.log('ℹ️ Iniciar_Aplicativo.exe em execução ou bloqueado (resolução dinâmica de versão ativa no código).');
+  }
 }
 
 // 5. Execução do fluxo Git

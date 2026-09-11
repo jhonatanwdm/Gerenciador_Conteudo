@@ -295,7 +295,36 @@ namespace GerenciadorConteudo
         private const int DWMWA_TEXT_COLOR = 36;
 
         private const string NOME_APP = "Gerenciador de Conteúdo";
-        private const string VERSAO_APP = "1.0.0";
+        private static string versaoAppCache = null;
+        private static DateTime ultimaLeituraVersao = DateTime.MinValue;
+
+        public static string ObterVersaoApp()
+        {
+            if (versaoAppCache != null && (DateTime.Now - ultimaLeituraVersao).TotalSeconds < 2)
+            {
+                return versaoAppCache;
+            }
+
+            try
+            {
+                string arqPkg = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "package.json");
+                if (File.Exists(arqPkg))
+                {
+                    string json = File.ReadAllText(arqPkg);
+                    var match = System.Text.RegularExpressions.Regex.Match(json, "\"version\"\\s*:\\s*\"([^\"]+)\"");
+                    if (match.Success)
+                    {
+                        versaoAppCache = match.Groups[1].Value.Trim();
+                        ultimaLeituraVersao = DateTime.Now;
+                        return versaoAppCache;
+                    }
+                }
+            }
+            catch { }
+
+            return versaoAppCache ?? "1.1.0";
+        }
+
         private System.Windows.Forms.Timer timerTitulo;
         private DateTime inicioApp = DateTime.Now;
 
@@ -449,6 +478,46 @@ namespace GerenciadorConteudo
                     concluirTransicao();
                 };
 
+                webView.CoreWebView2.DocumentTitleChanged += (s, args) =>
+                {
+                    try
+                    {
+                        string docTitle = webView.CoreWebView2.DocumentTitle;
+                        if (!string.IsNullOrEmpty(docTitle) && docTitle.Contains("- v"))
+                        {
+                            var m = System.Text.RegularExpressions.Regex.Match(docTitle, "- v([0-9.]+)");
+                            if (m.Success)
+                            {
+                                versaoAppCache = m.Groups[1].Value.Trim();
+                                ultimaLeituraVersao = DateTime.Now;
+                            }
+                        }
+                    }
+                    catch { }
+                };
+
+                webView.CoreWebView2.WebMessageReceived += (s, args) =>
+                {
+                    try
+                    {
+                        string msg = args.TryGetWebMessageAsString();
+                        if (!string.IsNullOrEmpty(msg))
+                        {
+                            if (msg.StartsWith("versao:"))
+                            {
+                                versaoAppCache = msg.Substring(7).Trim();
+                                ultimaLeituraVersao = DateTime.Now;
+                                this.Text = ObterTextoTitulo();
+                            }
+                            else if (msg == "recarregar")
+                            {
+                                webView.CoreWebView2.Reload();
+                            }
+                        }
+                    }
+                    catch { }
+                };
+
                 ProgramaPrincipal.Log("Navegando para " + urlInicial + "...");
                 webView.CoreWebView2.Navigate(urlInicial);
 
@@ -480,8 +549,10 @@ namespace GerenciadorConteudo
             DateTime agora = DateTime.Now;
             string dataHoraStr = string.Format("{0:dd-MM-yyyy} | {0:HH:mm:ss}", agora);
 
+            string versao = ObterVersaoApp();
+
             return string.Format("|| {0} - v{1} || Tempo Online : {2} || Data e Horario : {3} ||",
-                NOME_APP, VERSAO_APP, tempoOnlineStr, dataHoraStr);
+                NOME_APP, versao, tempoOnlineStr, dataHoraStr);
         }
 
         private void IniciarTituloDinamico()

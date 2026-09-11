@@ -79,6 +79,24 @@ export const AplicativoVisual: React.FC = () => {
   // Atualização em tempo real do título da aplicação seguindo o padrão da Central de Redes Sociais
   useEffect(() => {
     const inicioMs = Date.now();
+    let versaoDinamica = '1.1.0';
+
+    const buscarVersao = async () => {
+      try {
+        const resp = await fetch('/api/sistema/saude');
+        if (resp.ok) {
+          const d = await resp.json();
+          if (d && d.versao) {
+            versaoDinamica = d.versao;
+            if (typeof window !== 'undefined' && (window as any).chrome?.webview?.postMessage) {
+              (window as any).chrome.webview.postMessage('versao:' + d.versao);
+            }
+          }
+        }
+      } catch {}
+    };
+    void buscarVersao();
+
     const atualizarTitulo = () => {
       const agora = new Date();
       const dd = String(agora.getDate()).padStart(2, '0');
@@ -95,7 +113,7 @@ export const AplicativoVisual: React.FC = () => {
       const segundos = total % 60;
       const tempoOnline = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
-      document.title = `|| Gerenciador de Conteúdo - v1.1.0 || Tempo Online : ${tempoOnline} || Data e Horario : ${dataHora} ||`;
+      document.title = `|| Gerenciador de Conteúdo - v${versaoDinamica} || Tempo Online : ${tempoOnline} || Data e Horario : ${dataHora} ||`;
     };
 
     atualizarTitulo();

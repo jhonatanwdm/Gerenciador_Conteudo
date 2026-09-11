@@ -7,7 +7,34 @@ const fs = require('fs');
 nativeTheme.themeSource = 'dark';
 
 const NOME_APP = 'Gerenciador de Conteúdo';
-const VERSAO_APP = '1.1.0';
+let versaoAppCache = null;
+let ultimaLeituraVersao = 0;
+
+function obterVersaoApp() {
+  const agora = Date.now();
+  if (versaoAppCache && agora - ultimaLeituraVersao < 2000) {
+    return versaoAppCache;
+  }
+  try {
+    const caminhosPkg = [
+      path.resolve(__dirname, '../../../package.json'),
+      path.resolve(__dirname, '../package.json'),
+      'D:/Gerenciador_Conteudo/package.json',
+    ];
+    for (const p of caminhosPkg) {
+      if (fs.existsSync(p)) {
+        const pkg = JSON.parse(fs.readFileSync(p, 'utf8'));
+        if (pkg && pkg.version) {
+          versaoAppCache = pkg.version;
+          ultimaLeituraVersao = agora;
+          return versaoAppCache;
+        }
+      }
+    }
+  } catch {}
+  return versaoAppCache || '1.1.0';
+}
+
 let inicioAppMs = Date.now();
 let timerTitulo = null;
 
@@ -29,8 +56,9 @@ function montarTextoTitulo(nomeModulo = NOME_APP) {
   const ss = String(agora.getSeconds()).padStart(2, '0');
   const dataHora = `${dd}-${mm}-${yyyy} | ${hh}:${mi}:${ss}`;
   const tempoOnline = formatarTempoOnline(inicioAppMs);
+  const versao = obterVersaoApp();
   return (
-    `|| ${nomeModulo} - v${VERSAO_APP} || ` +
+    `|| ${nomeModulo} - v${versao} || ` +
     `Tempo Online : ${tempoOnline} || ` +
     `Data e Horario : ${dataHora} ||`
   );

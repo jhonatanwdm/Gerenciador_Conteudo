@@ -1,169 +1,165 @@
-# Multi-Platform & Multi-Account Content Manager
+# Gerenciador de Conteúdo Multi-Plataforma & Multi-Conta
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)](https://github.com/jhonatanwdm/Gerenciador_Conteudo)
+[![Versão](https://img.shields.io/badge/versão-1.1.0-blue.svg?style=for-the-badge)](https://github.com/jhonatanwdm/Gerenciador_Conteudo)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Electron](https://img.shields.io/badge/Electron-34.5-47848f?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.4-2d3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](./LICENSE)
+[![Licença](https://img.shields.io/badge/Licença-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
 <br />
 
-**[🌐 English Version (LEIA-ME.md)](./LEIA-ME.md)** &nbsp;|&nbsp; **[🇧🇷 Versão em Português (README.md)](./README.md)**
+**[🇧🇷 Versão em Português (LEIA-ME.md)](./LEIA-ME.md)** &nbsp;|&nbsp; **[🌐 English Version (README.md)](./README.md)**
 
 <p align="center">
-  Enterprise-grade publishing, automation, and monitoring platform for multi-platform and multi-account social media distribution with fault tolerance, strict idempotency, and native desktop app experience.
+  Plataforma profissional de publicação, automação e monitoramento de conteúdos para múltiplas plataformas e contas sociais independentes com tolerância a falhas, idempotência estrita e interface desktop nativa.
 </p>
-
-> **Nota:** Esta é a versão em inglês da documentação do projeto. Para a versão oficial em Português do Brasil exibida na página principal do repositório, consulte o [README.md](./README.md).
-> 
-> **Note:** This is the English version of the project documentation. For the official Brazilian Portuguese version displayed on the repository home page, see [README.md](./README.md).
 
 </div>
 
 ---
 
-## 🚀 Project Overview
+## 🚀 Visão Geral do Projeto
 
-The **Content Manager** fundamentally resolves a standard limitation of traditional social media management suites: **the destination target is not the platform itself, but the specific authenticated social account**.
+O **Gerenciador de Conteúdo** resolve de forma definitiva a limitação tradicional de ferramentas de automação social: **o destino da postagem não é a plataforma em si, mas a conta conectada específica**. 
 
-A single logical content unit can be published simultaneously to:
-- Multiple **YouTube** channels (e.g., Main Channel, Clips Channel, Secondary Channel);
-- Multiple **Instagram** and **Facebook** pages and profiles;
-- Multiple **TikTok** and **Kwai** accounts.
+Um único conteúdo lógico pode ser publicado simultaneamente em:
+- Múltiplos canais de **YouTube** (ex: canal principal, canal de cortes e canal secundário);
+- Múltiplas páginas ou perfis de **Instagram** e **Facebook**;
+- Múltiplas contas de **TikTok** e **Kwai**.
 
-Every individual destination maintains a decoupled lifecycle, retry mechanism, configuration snapshots, and isolated error reporting.
-
----
-
-## 🌟 Core Features
-
-### 1. Destination Resilience & Fault Isolation
-- **Isolated Failures**: If one YouTube account fails due to API quota limits or expired OAuth tokens, destinations targeting Instagram, Facebook, TikTok, and other channels continue processing uninterrupted up to the `PUBLISHED` state.
-- **Dynamic Aggregate Status**: The overarching campaign dynamically tracks real-time progress (`SUCCESS`, `PARTIAL`, `PROCESSING`, `FAILED`).
-- **Strict Idempotency Keys**: Defense-in-depth protection against duplicate posts during network reconnections and reprocessing triggers:
-  ```
-  idempotency_key = `${content_id}_${publication_id}_${social_account_id}`
-  ```
-
-### 2. Advanced Notification Center with Procedural Audio
-- **Toast Notifications**: Categorized visual and audio alerts (Success, Error, Processing, Media, etc.).
-- **Retractable Notification Drawer**: Persistent slide-out tray featuring unread badge indicators, category filter chips (`All`, `Success`, `Processes`, `Media`, `Copied`, `Warnings/Errors`) in a responsive layout, and instant session clearing.
-- **Web Audio API Procedural Sound**: Studio-grade system audio tones synthesized on the fly via code without external audio asset downloads.
-
-### 3. Synchronized Updater with Seamless Overlay
-- **Zero-Flicker Reload**: The application handles data synchronization and frontend rebuild updates behind a continuous dark themed overlay card with spinning indicators and progress bars.
-- **Session-Persisted Continuity**: State persists in `sessionStorage` across window reloads, eliminating white flashes and ensuring all CSS, DOM, and bundle updates are cleanly mounted before revealing the interface.
-
-### 4. 5 Native Social Integrations
-- **YouTube**: Long-form videos and Shorts upload with tags, category management, and privacy controls.
-- **Instagram**: Feed and Reels posting with aspect ratio and media verification.
-- **Facebook**: Page and professional profile publication with links and media galleries.
-- **TikTok**: Short-form video distribution with metadata and caption validation.
-- **Kwai**: High-speed vertical video ingestion pipeline.
+Cada destino possui ciclo de vida, controle de retentativas, snapshots de configuração e tratamento de erro 100% isolados.
 
 ---
 
-## 🏛️ Monorepo Architecture
+## 🌟 Principais Recursos
 
-The project is architected as an organized, decoupled monorepo:
+### 1. Resiliência e Isolamento de Destinos
+- **Falhas Isoladas**: Se uma conta do YouTube falhar por quota ou token expirado, os envios para o Instagram, Facebook, TikTok e outras contas continuam operando normalmente até o status `PUBLISHED`.
+- **Status Agregado Dinâmico**: A campanha calcula em tempo real o progresso global (`SUCCESS`, `PARTIAL`, `PROCESSING`, `FAILED`).
+- **Chave de Idempotência Estrita**: Proteção contra publicações duplicadas em caso de reprocessamento ou falhas temporárias de rede:
+  ```
+  chave_idempotencia = `${conteudo_id}_${publicacao_id}_${social_account_id}`
+  ```
+
+### 2. Central de Notificações Avançada com Áudio Procedural
+- **Notificações Flutuantes (Toasts)**: Avisos sonoros e visuais categorizados por tipo (Sucesso, Erro, Processamento, Mídias, etc.).
+- **Gaveta Retrátil com Histórico**: Painel lateral dedicado com contagem de notificações não lidas, filtros por categoria (`Todas`, `Sucesso`, `Processos`, `Mídias`, `Copiados`, `Avisos/Erros`) em formato retangular responsivo e opções de limpeza instantânea.
+- **Áudio Sintetizado via Web Audio API**: Sons de sistema profissionais gerados por código sem dependência de arquivos externos de áudio.
+
+### 3. Sistema de Atualização Sincronizada com Overlay Contínuo
+- **Overlay Sem Fissuras**: O processo de atualização sincroniza banco de dados e arquivos com overlay com spinner gradiente e barra de progresso.
+- **Recarregamento Invisível**: O sistema persiste o estado na `sessionStorage`, recarrega os componentes e a janela nativa *por trás* do aviso da overlay sem tela branca e exibe o toast de sucesso ao concluir.
+
+### 4. 5 Plataformas Nativas Integradas
+- **YouTube**: Upload de vídeos longos e Shorts, tags, categorias e privacidade.
+- **Instagram**: Postagem no Feed e Reels com verificação de proporção de mídia.
+- **Facebook**: Publicação em Páginas e perfis profissionais com links e imagens.
+- **TikTok**: Envio de vídeos curtos com verificação de metadados e legendas.
+- **Kwai**: Distribuição em alta velocidade para vídeos verticais.
+
+---
+
+## 🏛️ Arquitetura Monorepo
+
+O projeto é estruturado em monorepo modular e desacoplado:
 
 ```
 d:/Gerenciador_Conteudo/
 ├── Aplicativos_Base/
-│   ├── Interface_Desktop/        # Native Electron desktop app with custom window frame & IPC
-│   ├── Interface_Web/            # Modern SPA built with React 18, Vite, Tailwind CSS & Lucide
-│   ├── Servidor_Api/             # REST API in Node.js with Express & TypeScript
-│   └── Trabalhador_Fila/         # Background queue workers and task scheduler
+│   ├── Interface_Desktop/        # Aplicativo Electron nativo com barra de título e IPC
+│   ├── Interface_Web/            # SPA moderna em React 18, Vite, Tailwind CSS e Lucide
+│   ├── Servidor_Api/             # API REST em Node.js com Express e TypeScript
+│   └── Trabalhador_Fila/         # Processador de filas e agendamentos em background
 ├── Pacotes_Modulos/
-│   ├── Adaptador_Facebook/       # Facebook Graph API connector
-│   ├── Adaptador_Instagram/      # Instagram Graph API connector
-│   ├── Adaptador_Kwai/           # Kwai Open API connector
-│   ├── Adaptador_Tiktok/         # TikTok Content Posting API connector
-│   ├── Adaptador_Youtube/        # YouTube Data API v3 connector
-│   ├── Banco_Dados/              # Prisma ORM schema with SQLite & PostgreSQL support
-│   ├── Nucleo_Plataformas/       # Interfaces, capabilities resolver, and adapter registry
-│   └── Processador_Midia/        # FFmpeg media processing engine and platform presets
-├── Configuracoes_Sistema/        # Environment configurations and variables
-├── Documentos_Projeto/           # Architecture, installation, and user documentation
-├── Infraestrutura_Sistema/       # Docker Compose, native WebView2 binaries, and visual assets
-├── Iniciar_Aplicativo.exe        # Single-click native launcher for Windows
+│   ├── Adaptador_Facebook/       # Integração com Graph API Facebook
+│   ├── Adaptador_Instagram/      # Integração com Instagram Graph API
+│   ├── Adaptador_Kwai/           # Integração com Open API Kwai
+│   ├── Adaptador_Tiktok/         # Integração com TikTok Content Posting API
+│   ├── Adaptador_Youtube/        # Integração com YouTube Data API v3
+│   ├── Banco_Dados/              # Esquema Prisma ORM com SQLite e PostgreSQL
+│   ├── Nucleo_Plataformas/       # Interfaces, capacidades e registro de adaptadores
+│   └── Processador_Midia/        # Processamento de mídia com FFmpeg e presets
+├── Configuracoes_Sistema/        # Configurações de ambiente e variáveis
+├── Documentos_Projeto/           # Manuais de instalação, instrução e arquitetura
+├── Infraestrutura_Sistema/       # Docker Compose, DLLs nativas do WebView2 e ícones
+├── Iniciar_Aplicativo.exe        # Launcher nativo de 1 clique para Windows
 └── scripts/
-    └── versionar_e_subir.js      # Official Git versioning and release deployment script
+    └── versionar_e_subir.js      # Utilitário oficial de versionamento e sincronia Git
 ```
 
 ---
 
-## ⚙️ Installation & Getting Started
+## ⚙️ Instalação e Execução
 
-### Prerequisites
-- **Node.js**: Version 20 or higher
-- **NPM**: Version 10 or higher
-- **Git**: Configured in your environment
+### Pré-requisitos
+- **Node.js**: Versão 20 ou superior
+- **NPM**: Versão 10 ou superior
+- **Git**: Configurado no ambiente
 
-### 1. Install Dependencies
-In the root directory of the project:
+### 1. Instalação das Dependências
+Na raiz do projeto:
 ```bash
 npm.cmd install
 ```
 
-### 2. Local Database Initialization
-Generate Prisma client artifacts and seed initial platforms and social accounts:
+### 2. Inicialização do Banco de Dados Local
+Gera o cliente Prisma e popula as plataformas e contas iniciais:
 ```bash
 npm.cmd run banco:gerar
 npm.cmd run banco:migrar
 npm.cmd run banco:semear
 ```
 
-### 3. Running Services
+### 3. Execução dos Serviços
 
-Start each service in individual terminal instances:
+Você pode iniciar os serviços individualmente em terminais separados:
 
 ```bash
-# 1. REST API Server (port 3333)
+# 1. Servidor REST API (porta 3333)
 npm.cmd run iniciar:servidor
 
-# 2. Queue Background Worker
+# 2. Trabalhador de Filas (Background Worker)
 npm.cmd run iniciar:trabalhador
 
-# 3. Native Desktop Application (Electron)
+# 3. Interface Desktop Nativa (Electron)
 npm.cmd run iniciar:desktop
 ```
 
 ---
 
-## ⚡ Quick 1-Click Launch (`Iniciar_Aplicativo.exe`)
+## ⚡ Inicialização Rápida com 1 Clique (`Iniciar_Aplicativo.exe`)
 
-For daily desktop use on Windows, the project root includes:
+Para facilitar o uso no dia a dia no Windows, a raiz do projeto contém o executável:
 - **`Iniciar_Aplicativo.exe`**
 
-Double-clicking this executable:
-1. Spawns the REST API and Queue Workers in the background automatically.
-2. Opens the native Electron window with an integrated loading screen.
-3. Automatically shuts down all background processes and cleans up system resources upon exit.
+Ao clicar duas vezes nele:
+1. O backend da API e os workers de fila são iniciados automaticamente em background.
+2. A janela nativa abre com tela de carregamento integrada.
+3. Ao fechar a aplicação, todos os processos são encerrados com liberação de recursos de memória.
 
 ---
 
-## 🔄 Versioning and Git Publication Standards
+## 🔄 Regra de Versionamento e Publicação no Git
 
-This repository follows strict release protocols:
-- Code pushes to Git **never** occur automatically during standard development.
-- Release publication is triggered explicitly by the user command:
-  > **`Nova versão do projeto`** followed by version number and release notes.
-- The workflow updates monorepo `package.json` manifests, source code version constants (`Principal.cjs`, `Aplicativo_Visual.tsx`, `Controlador_Geral.ts`), builds static assets, and pushes commits and tags strictly formatted in Brazilian Portuguese (PT-BR):
+O repositório segue a regra oficial estrita:
+- O envio para o Git **nunca** acontece automaticamente em tarefas ordinárias.
+- O envio é acionado com o comando:
+  > **`Nova versão do projeto`** seguido do número da versão e da descrição.
+- O versionamento atualiza todos os `package.json`, constantes de versão no código (`Principal.cjs`, `Aplicativo_Visual.tsx`, `Controlador_Geral.ts`), compila os pacotes e sobe commits e tags sempre em **PT-BR**:
 ```bash
-npm run nova-versao -- 1.0.1 "Bug fixes and performance enhancements"
+npm run nova-versao -- 1.1.0 "Novas atualizações e correções críticas"
 ```
 
 ---
 
-## 📄 License
+## 📄 Licença
 
-This project is licensed under the **MIT License**. See the license documentation for details.
+Este projeto é distribuído sob a licença **MIT**. Consulte o arquivo de licença para mais detalhes.
 
 <div align="center">
-  <sub>Engineered with technical precision by <strong>Jhonatan</strong>.</sub>
+  <sub>Desenvolvido com excelência técnica por <strong>Jhonatan</strong>.</sub>
 </div>
