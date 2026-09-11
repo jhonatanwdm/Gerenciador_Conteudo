@@ -84,6 +84,23 @@ if (fs.existsSync(arquivoControladorGeral)) {
   console.log(`✓ Atualizado versao no Controlador_Geral.ts`);
 }
 
+// Atualizar badges em README.md e LEIA-ME.md
+const arquivoReadme = path.join(raizProjeto, 'README.md');
+if (fs.existsSync(arquivoReadme)) {
+  let doc = fs.readFileSync(arquivoReadme, 'utf8');
+  doc = doc.replace(/badge\/vers[aã%0-9A-F]+-[0-9.]+-blue/gi, `badge/vers%C3%A3o-${novaVersao}-blue`);
+  fs.writeFileSync(arquivoReadme, doc, 'utf8');
+  console.log(`✓ Atualizado badge de versão em README.md`);
+}
+
+const arquivoLeiaMe = path.join(raizProjeto, 'LEIA-ME.md');
+if (fs.existsSync(arquivoLeiaMe)) {
+  let doc = fs.readFileSync(arquivoLeiaMe, 'utf8');
+  doc = doc.replace(/badge\/version-[0-9.]+-blue/gi, `badge/version-${novaVersao}-blue`);
+  fs.writeFileSync(arquivoLeiaMe, doc, 'utf8');
+  console.log(`✓ Atualizado badge de versão em LEIA-ME.md`);
+}
+
 // 4. Recompilar Interface Web se necessário
 console.log('\n📦 Recompilando pacotes estáticos da Interface Web...');
 try {

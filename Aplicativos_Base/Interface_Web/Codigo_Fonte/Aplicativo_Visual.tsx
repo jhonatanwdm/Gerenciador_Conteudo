@@ -95,7 +95,7 @@ export const AplicativoVisual: React.FC = () => {
       const segundos = total % 60;
       const tempoOnline = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
-      document.title = `|| Gerenciador de Conteúdo - v1.0.0 || Tempo Online : ${tempoOnline} || Data e Horario : ${dataHora} ||`;
+      document.title = `|| Gerenciador de Conteúdo - v1.1.0 || Tempo Online : ${tempoOnline} || Data e Horario : ${dataHora} ||`;
     };
 
     atualizarTitulo();

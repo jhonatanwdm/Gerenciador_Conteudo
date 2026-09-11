@@ -1,6 +1,6 @@
 {
   "name": "@gerenciador/adaptador-youtube",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adaptador oficial e mock para YouTube Data API v3",
   "main": "Codigo_Fonte/Adaptador_Youtube.ts",
   "types": "Codigo_Fonte/Adaptador_Youtube.ts",

@@ -16,7 +16,7 @@ export class ControladorGeral {
         timestamp: new Date().toISOString(),
         modoSimulado: process.env.MOCK_MODE === 'true',
         banco: 'CONECTADO',
-        versao: '1.0.0',
+        versao: '1.1.0',
       });
     } catch (erro: any) {
       res.status(500).json({

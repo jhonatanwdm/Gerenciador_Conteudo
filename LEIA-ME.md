@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/jhonatanwdm/Gerenciador_Conteudo)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)](https://github.com/jhonatanwdm/Gerenciador_Conteudo)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Electron](https://img.shields.io/badge/Electron-34.5-47848f?style=for-the-badge&logo=electron&logoColor=white)](https://www.electronjs.org/)

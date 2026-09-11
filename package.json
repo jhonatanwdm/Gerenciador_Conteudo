@@ -1,6 +1,6 @@
 {
   "name": "gerenciador-conteudo-multiplataforma",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Plataforma de gerenciamento e automação de conteúdo multi-plataforma e multi-conta",
   "private": true,
   "workspaces": [

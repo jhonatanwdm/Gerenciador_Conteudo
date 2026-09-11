@@ -7,7 +7,7 @@ const fs = require('fs');
 nativeTheme.themeSource = 'dark';
 
 const NOME_APP = 'Gerenciador de Conteúdo';
-const VERSAO_APP = '1.0.0';
+const VERSAO_APP = '1.1.0';
 let inicioAppMs = Date.now();
 let timerTitulo = null;
 

@@ -1,6 +1,6 @@
 {
   "name": "@gerenciador/servidor-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Servidor REST API para gerenciamento e automação multi-plataforma",
   "main": "Codigo_Fonte/Aplicativo_Principal.ts",
   "scripts": {

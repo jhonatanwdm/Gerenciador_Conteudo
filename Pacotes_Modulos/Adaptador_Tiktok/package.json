@@ -1,6 +1,6 @@
 {
   "name": "@gerenciador/adaptador-tiktok",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adaptador oficial e mock para TikTok Content Posting API (Direct Post e Upload Draft)",
   "main": "Codigo_Fonte/Adaptador_Tiktok.ts",
   "types": "Codigo_Fonte/Adaptador_Tiktok.ts",
