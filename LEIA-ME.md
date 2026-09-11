@@ -12,11 +12,15 @@
 
 <br />
 
-**[🌐 English Version (LEME.md)](./LEME.md)** &nbsp;|&nbsp; **[🇧🇷 Versão em Português (README.md)](./README.md)**
+**[🌐 English Version (LEIA-ME.md)](./LEIA-ME.md)** &nbsp;|&nbsp; **[🇧🇷 Versão em Português (README.md)](./README.md)**
 
 <p align="center">
   Enterprise-grade publishing, automation, and monitoring platform for multi-platform and multi-account social media distribution with fault tolerance, strict idempotency, and native desktop app experience.
 </p>
+
+> **Nota:** Esta é a versão em inglês da documentação do projeto. Para a versão oficial em Português do Brasil exibida na página principal do repositório, consulte o [README.md](./README.md).
+> 
+> **Note:** This is the English version of the project documentation. For the official Brazilian Portuguese version displayed on the repository home page, see [README.md](./README.md).
 
 </div>
 

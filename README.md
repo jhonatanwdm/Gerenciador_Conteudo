@@ -12,7 +12,7 @@
 
 <br />
 
-**[🌐 English Version (LEME.md)](./LEME.md)** &nbsp;|&nbsp; **[🇧🇷 Versão em Português (README.md)](./README.md)**
+**[🌐 English Version (LEIA-ME.md)](./LEIA-ME.md)** &nbsp;|&nbsp; **[🇧🇷 Versão em Português (README.md)](./README.md)**
 
 <p align="center">
   Plataforma profissional de publicação, automação e monitoramento de conteúdos para múltiplas plataformas e contas sociais independentes com tolerância a falhas, idempotência estrita e interface desktop nativa.

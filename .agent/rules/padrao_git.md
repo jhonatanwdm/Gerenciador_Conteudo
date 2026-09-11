@@ -34,4 +34,4 @@ always_on: true
 ## 5. Documentação Obrigatória
 - Manter e subir sempre os dois arquivos:
   - `README.md`: **SEMPRE em Português do Brasil (PT-BR)**, renderizado no GitHub.
-  - `LEME.md`: espelhado em **Inglês (EN)**.
+  - `LEIA-ME.md`: espelhado em **Inglês (EN)**.

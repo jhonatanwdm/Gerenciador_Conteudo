@@ -43,10 +43,10 @@ Sempre que subir uma nova versão para o Git:
      `git push origin main --tags`
      (Repositório: `https://github.com/jhonatanwdm/Gerenciador_Conteudo.git`)
 
-### 1.5 Documentação Oficial Obrigatória: README.md (PT-BR) e LEME.md (EN)
+### 1.5 Documentação Oficial Obrigatória: README.md (PT-BR) e LEIA-ME.md (EN)
 Sempre manter e subir dois arquivos de apresentação do projeto:
 - `README.md`: **SEMPRE em Português do Brasil (PT-BR)**, sendo o documento oficial renderizado na página principal do GitHub.
-- `LEME.md`: versão espelhada em **Inglês (EN)** com a mesma profundidade técnica e arquitetura.
+- `LEIA-ME.md`: versão espelhada em **Inglês (EN)** com a mesma profundidade técnica e arquitetura.
 - Ambos devem conter links rápidos de alternância de idioma no topo do documento.
 
 ---
