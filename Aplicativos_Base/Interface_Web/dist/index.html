@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR" class="dark" style="background-color: #0B0F17; color-scheme: dark;">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/Icone_Padrao.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciador Multi-Plataforma & Multi-Conta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        background-color: #0B0F17;
+        color: #f1f5f9;
+        margin: 0;
+        padding: 0;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      #bootstrap-overlay-recarga {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999999999;
+        background: rgba(0, 0, 0, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: wait;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+                user-select: none;
+      }
+      @keyframes girar-overlay-boot {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes girar-reverso-boot {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+      }
+      @keyframes gradiente-movimento-boot {
+        0% { background-position: 100% 0; }
+        100% { background-position: -100% 0; }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-DnmFLrrR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BToF3rRw.css">
+  </head>
+  <body class="bg-escuro-950 text-slate-100 antialiased overflow-x-hidden selection:bg-destaque-azul selection:text-white" style="background-color: #0B0F17;">
+    <script>
+      (function() {
+        try {
+          var salvo = sessionStorage.getItem('gerenciador_overlay_recarga');
+          if (salvo) {
+            var info = JSON.parse(salvo);
+            if (info && info.ativo && (Date.now() - info.inicioMs < 15000)) {
+              var titulo = info.titulo || 'Recebendo atualização...';
+              var subtitulo = info.subtitulo || 'Sincronizando arquivos e dados do projeto';
+              var div = document.createElement('div');
+              div.id = 'bootstrap-overlay-recarga';
+              div.innerHTML = '<div style="position:relative;background:#0d121f;border:1.5px solid rgba(99,102,241,0.45);border-radius:24px;padding:48px 56px;text-align:center;width:50vw;max-width:50vw;min-width:480px;min-height:48vh;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 35px 80px -15px rgba(0,0,0,0.98),0 0 60px rgba(99,102,241,0.25);"><div style="width:96px;height:96px;margin:0 auto 28px;position:relative;display:flex;align-items:center;justify-content:center;"><div style="position:absolute;inset:0;border-radius:50%;border:4.5px solid transparent;border-top-color:#6366f1;border-right-color:#818cf8;animation:girar-overlay-boot 1s cubic-bezier(0.68,-0.55,0.27,1.55) infinite;"></div><div style="position:absolute;inset:12px;border-radius:50%;border:4px solid transparent;border-bottom-color:#a855f7;border-left-color:#ec4899;animation:girar-reverso-boot 1.3s linear infinite;"></div><svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#818cf8" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div><h3 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#f3f4f6;letter-spacing:-0.02em;">' + titulo + '</h3><p style="margin:0;font-size:16px;color:#9ca3af;line-height:1.5;max-width:85%;">' + subtitulo + '</p><div style="width:80%;max-width:560px;height:8px;background:#1f2937;border-radius:999px;overflow:hidden;margin-top:36px;border:1px solid rgba(255,255,255,0.08);"><div style="height:100%;width:100%;background:linear-gradient(90deg,#6366f1,#a855f7,#ec4899,#6366f1);background-size:200% 100%;animation:gradiente-movimento-boot 2s linear infinite;border-radius:999px;"></div></div></div>';
+              document.body.appendChild(div);
+            }
+          }
+        } catch(e) {}
+      })();
+    </script>
+    <div id="raiz-aplicativo"></div>
+  </body>
+</html>

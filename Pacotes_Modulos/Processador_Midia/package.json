@@ -1,0 +1,11 @@
+{
+  "name": "@gerenciador/processador-midia",
+  "version": "1.0.0",
+  "description": "Gerenciador de armazenamento local e abstração de pipeline FFmpeg para normalização de vídeos",
+  "main": "Codigo_Fonte/Motor_Ffmpeg.ts",
+  "types": "Codigo_Fonte/Motor_Ffmpeg.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

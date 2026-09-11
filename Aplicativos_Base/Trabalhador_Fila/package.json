@@ -1,0 +1,27 @@
+{
+  "name": "@gerenciador/trabalhador-fila",
+  "version": "1.0.0",
+  "description": "Processador de background jobs e filas assíncronas",
+  "main": "Codigo_Fonte/Processador_Principal.ts",
+  "scripts": {
+    "dev": "tsx watch Codigo_Fonte/Processador_Principal.ts",
+    "iniciar": "tsx Codigo_Fonte/Processador_Principal.ts",
+    "construir": "tsc"
+  },
+  "dependencies": {
+    "@gerenciador/banco-dados": "*",
+    "@gerenciador/nucleo-plataformas": "*",
+    "@gerenciador/adaptador-youtube": "*",
+    "@gerenciador/adaptador-instagram": "*",
+    "@gerenciador/adaptador-facebook": "*",
+    "@gerenciador/adaptador-tiktok": "*",
+    "@gerenciador/adaptador-kwai": "*",
+    "@gerenciador/processador-midia": "*",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,552 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario_Sistema {
+  id           String   @id @default(uuid())
+  nome         String
+  email        String   @unique
+  senha_hash   String
+  perfil       String   @default("ADMINISTRADOR")
+  ativo        Boolean  @default(true)
+  criado_em    DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  conteudos_criados Conteudo_Base[]
+  registros_auditoria Registro_Auditoria[]
+
+  @@map("usuarios_sistema")
+}
+
+model Plataforma_Rede {
+  id           String   @id @default(uuid())
+  codigo       String   @unique // "youtube", "instagram", "facebook", "tiktok", "kwai"
+  nome         String
+  icone        String?
+  ativo        Boolean  @default(true)
+  criado_em    DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  contas_sociais         Conta_Social[]
+  destinos_publicacao    Destino_Publicacao[]
+  erros_api              Erro_Api[]
+  limites_taxa           Limite_Taxa[]
+  eventos_webhook        Evento_Webhook[]
+
+  @@map("plataformas_redes")
+}
+
+model Conta_Social {
+  id                   String   @id @default(uuid())
+  plataforma_id        String
+  id_externo_conta     String
+  nome                 String
+  nome_usuario         String
+  nome_exibicao        String
+  url_avatar           String?
+  tipo_conta           String   @default("STANDARD") // "CREATOR", "BUSINESS", "CHANNEL", "PAGE"
+  status               String   @default("CONNECTED") // "CONNECTED", "DISCONNECTED", "EXPIRED", "REAUTH_REQUIRED", "ERROR", "SUSPENDED", "LIMITED", "PENDING", "UNKNOWN"
+  fuso_horario         String   @default("America/Sao_Paulo")
+  ultima_sincronizacao DateTime?
+  criado_em            DateTime @default(now())
+  atualizado_em        DateTime @updatedAt
+
+  plataforma             Plataforma_Rede       @relation(fields: [plataforma_id], references: [id])
+  credencial_oauth       Credencial_Oauth?
+  capacidade_conta       Capacidade_Conta?
+  destinos_publicacao    Destino_Publicacao[]
+  metricas_conta         Metricas_Conta[]
+  comentarios            Comentario_Rede[]
+  limites_taxa           Limite_Taxa[]
+  erros_api              Erro_Api[]
+
+  @@unique([plataforma_id, id_externo_conta])
+  @@index([plataforma_id])
+  @@index([status])
+  @@map("contas_sociais")
+}
+
+model Credencial_Oauth {
+  id                       String   @id @default(uuid())
+  conta_social_id          String   @unique
+  token_acesso_cifrado     String
+  token_atualizacao_cifrado String?
+  expira_em                DateTime?
+  escopos                  String?
+  tipo_token               String   @default("Bearer")
+  criado_em                DateTime @default(now())
+  atualizado_em            DateTime @updatedAt
+
+  conta_social Conta_Social @relation(fields: [conta_social_id], references: [id], onDelete: Cascade)
+
+  @@map("credenciais_oauth")
+}
+
+model Capacidade_Conta {
+  id                    String   @id @default(uuid())
+  conta_social_id       String   @unique
+  suporta_video         Boolean  @default(true)
+  suporta_video_curto   Boolean  @default(true)
+  suporta_imagem        Boolean  @default(false)
+  suporta_carrossel     Boolean  @default(false)
+  suporta_reel          Boolean  @default(false)
+  suporta_story         Boolean  @default(false)
+  suporta_agendamento   Boolean  @default(true)
+  suporta_metricas      Boolean  @default(true)
+  suporta_comentarios   Boolean  @default(true)
+  suporta_resposta      Boolean  @default(true)
+  detalhes_json         String?
+  criado_em             DateTime @default(now())
+  atualizado_em         DateTime @updatedAt
+
+  conta_social Conta_Social @relation(fields: [conta_social_id], references: [id], onDelete: Cascade)
+
+  @@map("capacidades_contas")
+}
+
+model Ativo_Midia {
+  id                    String   @id @default(uuid())
+  nome_arquivo          String
+  caminho_armazenamento String
+  url_publica           String?
+  tipo_mime             String
+  tamanho_bytes         Int
+  duracao_segundos      Float?
+  largura_pixels        Int?
+  altura_pixels         Int?
+  formato_extensao      String
+  origem_upload         String   @default("MANUAL")
+  criado_em             DateTime @default(now())
+  atualizado_em         DateTime @updatedAt
+
+  variantes             Variante_Midia[]
+  destinos_publicacao   Destino_Publicacao[]
+
+  @@map("ativos_midias")
+}
+
+model Variante_Midia {
+  id                   String   @id @default(uuid())
+  ativo_midia_pai_id   String
+  codigo_preset        String // "youtube_shorts", "instagram_reel", "tiktok_feed", etc.
+  caminho_arquivo      String
+  resolucao            String?
+  tamanho_bytes        Int
+  taxa_bits            Int?
+  status_processamento String   @default("COMPLETED")
+  criado_em            DateTime @default(now())
+
+  ativo_midia_pai Ativo_Midia @relation(fields: [ativo_midia_pai_id], references: [id], onDelete: Cascade)
+
+  @@index([ativo_midia_pai_id])
+  @@map("variantes_midias")
+}
+
+model Conteudo_Base {
+  id            String   @id @default(uuid())
+  titulo        String
+  descricao     String?
+  tipo_conteudo String   @default("VIDEO") // "VIDEO", "SHORT_VIDEO", "IMAGE", "CAROUSEL", "REEL", "STORY", "TEXT"
+  idioma_padrao String   @default("pt-BR")
+  status        String   @default("DRAFT") // "DRAFT", "READY", "PUBLISHED", "ARCHIVED"
+  criado_por_id String?
+  criado_em     DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  criado_por       Usuario_Sistema?    @relation(fields: [criado_por_id], references: [id])
+  versoes_conteudo Versao_Conteudo[]
+  publicacoes      Publicacao_Acao[]
+  metricas_agregadas Metricas_Conteudo[]
+
+  @@map("conteudos_base")
+}
+
+model Versao_Conteudo {
+  id                String   @id @default(uuid())
+  conteudo_id       String
+  numero_versao     Int
+  titulo            String
+  descricao         String?
+  alteracoes_resumo String?
+  criado_em         DateTime @default(now())
+
+  conteudo Conteudo_Base @relation(fields: [conteudo_id], references: [id], onDelete: Cascade)
+
+  @@index([conteudo_id])
+  @@map("versoes_conteudos")
+}
+
+model Campanha_Publicacao {
+  id           String   @id @default(uuid())
+  nome         String
+  descricao    String?
+  cor_etiqueta String   @default("#3B82F6")
+  data_inicio  DateTime?
+  data_fim     DateTime?
+  status       String   @default("ACTIVE")
+  criado_em    DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  publicacoes Publicacao_Acao[]
+
+  @@map("campanhas_publicacoes")
+}
+
+model Publicacao_Acao {
+  id                   String   @id @default(uuid())
+  conteudo_id          String
+  campanha_id          String?
+  publicacao_pai_id    String?
+  status_global        String   @default("PENDING") // "PENDING", "PARTIAL", "SUCCESS", "FAILED"
+  criado_em            DateTime @default(now())
+  atualizado_em        DateTime @updatedAt
+
+  conteudo             Conteudo_Base        @relation(fields: [conteudo_id], references: [id], onDelete: Cascade)
+  campanha             Campanha_Publicacao? @relation(fields: [campanha_id], references: [id])
+  destinos             Destino_Publicacao[]
+
+  relacoes_como_origem Relacao_Publicacao[] @relation("OrigemPublicacao")
+  relacoes_como_alvo   Relacao_Publicacao[] @relation("AlvoPublicacao")
+
+  @@index([conteudo_id])
+  @@index([campanha_id])
+  @@index([status_global])
+  @@map("publicacoes_acoes")
+}
+
+model Destino_Publicacao {
+  id                      String   @id @default(uuid())
+  publicacao_id           String
+  conta_social_id         String
+  plataforma_id           String
+  ativo_midia_id          String?
+  titulo_personalizado    String?
+  descricao_personalizada String?
+  legenda_personalizada   String?
+  hashtags_personalizadas String?
+  cta_personalizado       String?
+  agendado_para           DateTime?
+  fuso_horario            String   @default("America/Sao_Paulo")
+  status                  String   @default("DRAFT")
+  // DRAFT, SCHEDULED, QUEUED, VALIDATING, PROCESSING, UPLOADING, PUBLISHING, PROCESSING_REMOTE, PUBLISHED, FAILED, RETRYING, CANCELLED, UNSUPPORTED, REQUIRES_APPROVAL, REQUIRES_MANUAL_ACTION
+  id_externo              String?
+  url_externa             String?
+  publicado_em            DateTime?
+  total_tentativas        Int      @default(0)
+  codigo_erro             String?
+  mensagem_erro           String?
+  chave_idempotencia      String?  @unique
+  criado_em               DateTime @default(now())
+  atualizado_em           DateTime @updatedAt
+
+  publicacao              Publicacao_Acao        @relation(fields: [publicacao_id], references: [id], onDelete: Cascade)
+  conta_social            Conta_Social           @relation(fields: [conta_social_id], references: [id])
+  plataforma              Plataforma_Rede        @relation(fields: [plataforma_id], references: [id])
+  ativo_midia             Ativo_Midia?           @relation(fields: [ativo_midia_id], references: [id])
+
+  trabalhos_fila          Trabalho_Fila[]
+  tentativas_publicacao   Tentativa_Publicacao[]
+  instantaneos_metricas   Instantaneo_Metricas[]
+  comentarios             Comentario_Rede[]
+
+  @@index([publicacao_id])
+  @@index([conta_social_id])
+  @@index([plataforma_id])
+  @@index([status])
+  @@index([agendado_para])
+  @@map("destinos_publicacoes")
+}
+
+model Relacao_Publicacao {
+  id                    String   @id @default(uuid())
+  publicacao_origem_id  String
+  publicacao_destino_id String
+  tipo_relacao          String   @default("REPOST") // "REPOST", "DUPLICATE", "DERIVED", "CROSSPOST"
+  criado_em             DateTime @default(now())
+
+  publicacao_origem  Publicacao_Acao @relation("OrigemPublicacao", fields: [publicacao_origem_id], references: [id], onDelete: Cascade)
+  publicacao_destino Publicacao_Acao @relation("AlvoPublicacao", fields: [publicacao_destino_id], references: [id], onDelete: Cascade)
+
+  @@unique([publicacao_origem_id, publicacao_destino_id, tipo_relacao])
+  @@map("relacoes_publicacoes")
+}
+
+model Trabalho_Fila {
+  id                     String   @id @default(uuid())
+  destino_publicacao_id  String
+  nome_fila              String   @default("publicacao")
+  id_trabalho_fila       String?
+  status                 String   @default("QUEUED")
+  prioridade             Int      @default(0)
+  tentativas_atuais      Int      @default(0)
+  maximo_tentativas      Int      @default(3)
+  proxima_execucao_em    DateTime?
+  bloqueado_por          String?
+  criado_em              DateTime @default(now())
+  atualizado_em          DateTime @updatedAt
+
+  destino_publicacao Destino_Publicacao @relation(fields: [destino_publicacao_id], references: [id], onDelete: Cascade)
+
+  @@index([destino_publicacao_id])
+  @@index([status])
+  @@map("trabalhos_filas")
+}
+
+model Tentativa_Publicacao {
+  id                    String   @id @default(uuid())
+  destino_publicacao_id String
+  numero_tentativa      Int
+  codigo_status         String?
+  resposta_bruta        String?
+  mensagem_erro         String?
+  duracao_ms            Int?
+  executado_em          DateTime @default(now())
+
+  destino_publicacao Destino_Publicacao @relation(fields: [destino_publicacao_id], references: [id], onDelete: Cascade)
+
+  @@index([destino_publicacao_id])
+  @@map("tentativas_publicacoes")
+}
+
+model Instantaneo_Metricas {
+  id                      String   @id @default(uuid())
+  destino_publicacao_id   String
+  capturado_em            DateTime @default(now())
+  visualizacoes           Int      @default(0)
+  curtidas                Int      @default(0)
+  comentarios             Int      @default(0)
+  compartilhamentos       Int      @default(0)
+  salvamentos             Int      @default(0)
+  seguidores              Int      @default(0)
+  alcance                 Int      @default(0)
+  impressoes              Int      @default(0)
+  tempo_assistido_segundos Float   @default(0)
+  taxa_engajamento        Float    @default(0)
+  dados_brutos_json       String?
+
+  destino_publicacao Destino_Publicacao @relation(fields: [destino_publicacao_id], references: [id], onDelete: Cascade)
+
+  @@index([destino_publicacao_id])
+  @@index([capturado_em])
+  @@map("instantaneos_metricas")
+}
+
+model Metricas_Conta {
+  id                   String   @id @default(uuid())
+  conta_social_id      String
+  capturado_em         DateTime @default(now())
+  total_seguidores     Int      @default(0)
+  total_inscritos      Int      @default(0)
+  visualizacoes_totais Int      @default(0)
+  total_publicacoes    Int      @default(0)
+  dados_brutos_json    String?
+
+  conta_social Conta_Social @relation(fields: [conta_social_id], references: [id], onDelete: Cascade)
+
+  @@index([conta_social_id])
+  @@index([capturado_em])
+  @@map("metricas_contas")
+}
+
+model Metricas_Conteudo {
+  id                          String   @id @default(uuid())
+  conteudo_id                 String
+  capturado_em                DateTime @default(now())
+  visualizacoes_agregadas     Int      @default(0)
+  curtidas_agregadas          Int      @default(0)
+  comentarios_agregados       Int      @default(0)
+  compartilhamentos_agregados Int      @default(0)
+
+  conteudo Conteudo_Base @relation(fields: [conteudo_id], references: [id], onDelete: Cascade)
+
+  @@index([conteudo_id])
+  @@map("metricas_conteudos")
+}
+
+model Comentario_Rede {
+  id                     String   @id @default(uuid())
+  destino_publicacao_id  String
+  conta_social_id        String
+  id_externo_comentario  String
+  autor_nome             String
+  autor_avatar           String?
+  autor_id_externo       String?
+  texto_conteudo         String
+  curtidas_total         Int      @default(0)
+  respondido             Boolean  @default(false)
+  data_comentario        DateTime @default(now())
+  criado_em              DateTime @default(now())
+
+  destino_publicacao Destino_Publicacao    @relation(fields: [destino_publicacao_id], references: [id], onDelete: Cascade)
+  conta_social       Conta_Social          @relation(fields: [conta_social_id], references: [id], onDelete: Cascade)
+  respostas          Resposta_Comentario[]
+
+  @@index([destino_publicacao_id])
+  @@index([conta_social_id])
+  @@map("comentarios_redes")
+}
+
+model Resposta_Comentario {
+  id                  String   @id @default(uuid())
+  comentario_pai_id   String
+  texto_resposta      String
+  status_envio        String   @default("SENT") // "PENDING", "SENT", "FAILED"
+  id_externo_resposta String?
+  enviado_em          DateTime @default(now())
+  criado_em           DateTime @default(now())
+
+  comentario_pai Comentario_Rede @relation(fields: [comentario_pai_id], references: [id], onDelete: Cascade)
+
+  @@index([comentario_pai_id])
+  @@map("respostas_comentarios")
+}
+
+model Marcador_Hashtag {
+  id            String   @id @default(uuid())
+  texto_hashtag String   @unique
+  categoria     String?
+  contagem_uso  Int      @default(0)
+  criado_em     DateTime @default(now())
+
+  @@map("marcadores_hashtags")
+}
+
+model Conjunto_Hashtag {
+  id             String   @id @default(uuid())
+  nome_conjunto  String   @unique
+  descricao      String?
+  hashtags_texto String
+  criado_em      DateTime @default(now())
+  atualizado_em  DateTime @updatedAt
+
+  @@map("conjuntos_hashtags")
+}
+
+model Modelo_Conteudo {
+  id               String   @id @default(uuid())
+  nome_modelo      String   @unique
+  categoria        String?
+  titulo_modelo    String?
+  descricao_modelo String?
+  hashtags_modelo  String?
+  cta_modelo       String?
+  criado_em        DateTime @default(now())
+  atualizado_em    DateTime @updatedAt
+
+  @@map("modelos_conteudos")
+}
+
+model Agendamento_Recorrente {
+  id             String   @id @default(uuid())
+  nome           String
+  expressao_cron String
+  fuso_horario   String   @default("America/Sao_Paulo")
+  ativo          Boolean  @default(true)
+  criado_em      DateTime @default(now())
+  atualizado_em  DateTime @updatedAt
+
+  @@map("agendamentos_recorrentes")
+}
+
+model Notificacao_Sistema {
+  id               String   @id @default(uuid())
+  titulo           String
+  mensagem         String
+  tipo_notificacao String   @default("INFO") // "INFO", "SUCCESS", "WARNING", "ERROR"
+  canal_alvo       String?
+  lida             Boolean  @default(false)
+  link_acao        String?
+  criado_em        DateTime @default(now())
+
+  @@index([lida])
+  @@map("notificacoes_sistema")
+}
+
+model Registro_Auditoria {
+  id               String   @id @default(uuid())
+  usuario_id       String?
+  acao_executada   String
+  entidade_tipo    String
+  entidade_id      String?
+  detalhes_json    String?
+  endereco_ip      String?
+  criado_em        DateTime @default(now())
+
+  usuario Usuario_Sistema? @relation(fields: [usuario_id], references: [id])
+
+  @@index([entidade_tipo])
+  @@index([criado_em])
+  @@map("registros_auditoria")
+}
+
+model Registro_Sistema {
+  id             String   @id @default(uuid())
+  nivel_log      String   // "INFO", "WARN", "ERROR"
+  modulo_origem  String
+  mensagem       String
+  contexto_json  String?
+  criado_em      DateTime @default(now())
+
+  @@index([nivel_log])
+  @@index([criado_em])
+  @@map("registros_sistema")
+}
+
+model Erro_Api {
+  id               String   @id @default(uuid())
+  plataforma_id    String
+  conta_social_id  String?
+  destino_id       String?
+  endpoint_chamado String
+  codigo_erro      String
+  resposta_corpo   String?
+  resolvido        Boolean  @default(false)
+  criado_em        DateTime @default(now())
+
+  plataforma   Plataforma_Rede @relation(fields: [plataforma_id], references: [id])
+  conta_social Conta_Social?   @relation(fields: [conta_social_id], references: [id])
+
+  @@index([plataforma_id])
+  @@index([codigo_erro])
+  @@map("erros_apis")
+}
+
+model Limite_Taxa {
+  id                    String   @id @default(uuid())
+  conta_social_id       String?
+  plataforma_id         String
+  tipo_recurso          String   @default("PUBLISH")
+  requisicoes_restantes Int      @default(100)
+  resetar_em            DateTime?
+  bloqueado_ate         DateTime?
+  criado_em             DateTime @default(now())
+  atualizado_em         DateTime @updatedAt
+
+  conta_social Conta_Social?   @relation(fields: [conta_social_id], references: [id])
+  plataforma   Plataforma_Rede @relation(fields: [plataforma_id], references: [id])
+
+  @@index([plataforma_id])
+  @@map("limites_taxas")
+}
+
+model Evento_Webhook {
+  id                 String   @id @default(uuid())
+  plataforma_id      String
+  id_evento_externo  String?
+  tipo_evento        String
+  carga_util_json    String
+  processado         Boolean  @default(false)
+  criado_em          DateTime @default(now())
+  processado_em      DateTime?
+
+  plataforma Plataforma_Rede @relation(fields: [plataforma_id], references: [id])
+
+  @@index([plataforma_id])
+  @@index([processado])
+  @@map("eventos_webhooks")
+}

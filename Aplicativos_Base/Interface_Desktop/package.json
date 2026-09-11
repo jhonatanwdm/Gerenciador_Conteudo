@@ -1,0 +1,10 @@
+{
+  "name": "@gerenciador/interface-desktop",
+  "version": "1.0.0",
+  "description": "Aplicativo Desktop nativo em Electron para Gerenciador de Conteúdo Multi-Plataforma",
+  "private": true,
+  "main": "index.cjs",
+  "scripts": {
+    "iniciar": "electron ."
+  }
+}

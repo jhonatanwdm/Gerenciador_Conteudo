@@ -1,0 +1,13 @@
+{
+  "name": "@gerenciador/adaptador-facebook",
+  "version": "1.0.0",
+  "description": "Adaptador oficial e mock para Facebook Pages Graph API",
+  "main": "Codigo_Fonte/Adaptador_Facebook.ts",
+  "types": "Codigo_Fonte/Adaptador_Facebook.ts",
+  "dependencies": {
+    "@gerenciador/nucleo-plataformas": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

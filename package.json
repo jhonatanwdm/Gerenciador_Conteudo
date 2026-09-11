@@ -1,0 +1,34 @@
+{
+  "name": "gerenciador-conteudo-multiplataforma",
+  "version": "1.0.0",
+  "description": "Plataforma de gerenciamento e automação de conteúdo multi-plataforma e multi-conta",
+  "private": true,
+  "workspaces": [
+    "Aplicativos_Base/*",
+    "Pacotes_Modulos/*"
+  ],
+  "scripts": {
+    "construir:tudo": "npm run construir --workspaces --if-present",
+    "iniciar:servidor": "npm run iniciar --workspace=Aplicativos_Base/Servidor_Api",
+    "iniciar:trabalhador": "npm run iniciar --workspace=Aplicativos_Base/Trabalhador_Fila",
+    "iniciar:interface": "npm run dev --workspace=Aplicativos_Base/Interface_Web",
+    "iniciar:desktop": "npm run iniciar --workspace=Aplicativos_Base/Interface_Desktop",
+    "banco:gerar": "npm run gerar --workspace=Pacotes_Modulos/Banco_Dados",
+    "banco:migrar": "npm run migrar --workspace=Pacotes_Modulos/Banco_Dados",
+    "banco:semear": "npm run semear --workspace=Pacotes_Modulos/Banco_Dados",
+    "nova-versao": "node scripts/versionar_e_subir.js",
+    "testar": "npm run testar --workspaces --if-present"
+  },
+  "keywords": [
+    "social-media",
+    "automation",
+    "youtube",
+    "instagram",
+    "facebook",
+    "tiktok",
+    "kwai",
+    "multi-account"
+  ],
+  "author": "Gerenciador de Conteúdo",
+  "license": "MIT"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@gerenciador/adaptador-instagram",
+  "version": "1.0.0",
+  "description": "Adaptador oficial e mock para Instagram Graph API (Contas Profissionais/Criadores)",
+  "main": "Codigo_Fonte/Adaptador_Instagram.ts",
+  "types": "Codigo_Fonte/Adaptador_Instagram.ts",
+  "dependencies": {
+    "@gerenciador/nucleo-plataformas": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@gerenciador/adaptador-kwai",
+  "version": "1.0.0",
+  "description": "Adaptador Kwai Open API com estrito respeito a limitações oficiais e fallbacks seguros",
+  "main": "Codigo_Fonte/Adaptador_Kwai.ts",
+  "types": "Codigo_Fonte/Adaptador_Kwai.ts",
+  "dependencies": {
+    "@gerenciador/nucleo-plataformas": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
