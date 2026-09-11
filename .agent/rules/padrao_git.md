@@ -30,3 +30,8 @@ always_on: true
 5. Executar `git commit -m "release(v<versao>): <texto descritivo>"`.
 6. Executar `git tag -a "v<versao>" -m "Versão <versao>: <texto descritivo>" -f`.
 7. Executar `git push origin main --tags` no repositório `https://github.com/jhonatanwdm/Gerenciador_Conteudo.git`.
+
+## 5. Documentação Obrigatória
+- Manter e subir sempre os dois arquivos:
+  - `README.md`: **SEMPRE em Português do Brasil (PT-BR)**, renderizado no GitHub.
+  - `LEME.md`: espelhado em **Inglês (EN)**.
